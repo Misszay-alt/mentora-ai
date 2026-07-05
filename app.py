@@ -12,14 +12,18 @@ def load_preloaded_files():
 
     for filename in files_to_load:
         if os.path.exists(filename):
-            reader = PyPDF2.PdfReader(filename)
-            for page in reader.pages:
-                text = page.extract_text()
-                if text:
-                    all_text += text + "\n"
+            try:
+                reader = PyPDF2.PdfReader(filename)
+                for page in reader.pages:
+                    text = page.extract_text()
+                    if text:
+                        all_text += text + "\n"
+            except:
+                all_text += f"\n[Could not read {filename}]\n"
         else:
             all_text += f"\n[Warning: {filename} not found]\n"
 
+    return all_text
 # Load materials automatically
 if "materials" not in st.session_state:
     st.session_state.materials = load_preloaded_files()
@@ -106,7 +110,8 @@ st.header("1. Course Materials")
 st.info("Your notes are already loaded by your teacher.")
 st.success("Mentora is ready! Ask me anything.")
 st.session_state.ready = True
-st.write(f"Materials loaded: {len(st.session_state.materials)} characters") 
+material_count = len(st.session_state.materials) if st.session_state.materials else 0
+st.write(f"Materials loaded: {material_count} characters")
 with st.spinner("Mentora AI is studying your materials..."):
     materials_text = st.session_state.materials
 
