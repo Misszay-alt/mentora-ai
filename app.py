@@ -65,7 +65,7 @@ else:
     # Step 2: Show chat box after we have name
     user_question = st.chat_input("Ask a question about your materials...")
 
-   user_question = st.chat_input("Ask a question about your materials...")
+    user_question = st.chat_input("Ask a question about your materials...")
 
 if user_question:  # <- ADD THIS LINE ABOVE line 69. 0 spaces
     with st.spinner("Mentora is thinking..."):  # <- 4 spaces
