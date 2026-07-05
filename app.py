@@ -63,14 +63,13 @@ else:
     st.success(f"Hi {st.session_state.user_name}! Mentora is ready for your questions.")
 
     # Step 2: Show chat box after we have name
-    
     user_question = st.chat_input("Ask a question about your materials...")
-if user_question:  # <- ADD THIS LINE ABOVE line 69. 0 spaces
-with st.spinner("Mentora is thinking..."):  # <- 4 spaces
-        # Build the prompt with name + materials + question
-        materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."  # <- 8 spaces
 
-        prompt = f"""You are Mentora, a friendly tutor.  # <- 8 spaces
+if user_question:
+    with st.spinner("Mentora is thinking..."):
+        materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."
+
+        prompt = f"""You are Mentora, a friendly tutor.
 Answer ONLY using the LEARNING MATERIAL below.
 If the answer is not in the material, say "I couldn't find that in your notes."
 
@@ -78,13 +77,13 @@ LEARNING MATERIAL:
 {materials_snippet}
 
 Student's question: {user_question}
-Answer:"""  # <- 8 spaces
+Answer:"""
 
         # Call Gemini to get the real answer
-        response = model.generate_content(prompt)  # <- 8 spaces
-        answer = response.text  # <- 8 spaces
+        response = model.generate_content(prompt)
+        answer = response.text
 
-        st.chat_message("user").write(user_question)  # <- 8 spaces
+        st.chat_message("user").write(user_question)
         st.chat_message("assistant").write(answer)  # <- 8 spaces
 def load_materials():
     folder_path = "materials"
