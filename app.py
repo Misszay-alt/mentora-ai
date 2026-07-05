@@ -55,17 +55,16 @@ for filename in os.listdir(folder_path):
                     text += para.text + "\n"
 
             all_text += f"\n\n--- START OF {filename} ---\n{text}\n--- END OF {filename} ---\n"
-        except Exception as e:
-            all_text += f"\nError reading {filename}: {e}"
+     except Exception as e:
+        all_text += f"\nError reading {filename}: {e}"
+
     return all_text if all_text else "No documents loaded."
 
 st.header("1. Course Materials")
-st.info("Your notes are already loaded by your teacher")
+st.info("Your notes are already loaded by your teacher.")
 st.success("Mentora is ready! Ask me anything.")
 st.session_state.ready = True
-# 4. BUILD MENTORA AI
-if "ready" not in st.session_state:
-    st.stop()
+st.stop()
 
 with st.spinner("Mentora AI is studying your materials..."):
     materials_text = st.session_state.materials
