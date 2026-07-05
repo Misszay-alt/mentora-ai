@@ -36,22 +36,41 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
-for filename in os.listdir(folder_path):
+
+def load_materials():
+    folder_path = "materials"
+    materials_text = []
+    for filename in os.listdir(folder_path):
         filepath = os.path.join(folder_path, filename)
-        text = ""
         try:
             if filename.endswith(".txt"):
                 with open(filepath, "r", encoding="utf-8") as f:
                     text = f.read()
-
             elif filename.endswith(".pdf"):
-                reader = PdfReader(filepath)
+                reader = PyPDF2.PdfReader(filepath)
+                text = ""
                 for page in reader.pages:
                     text += page.extract_text() + "\n"
-
             elif filename.endswith(".docx"):
                 doc = Document(filepath)
+                text = ""
                 for para in doc.paragraphs:
+                    text += para.text + "\n"
+            else:
+                text = ""
+
+            materials_text.append(f"\n\n--- START OF {filename} ---\n\n{text}\n\n--- END OF {filename} ---\n")
+        except Exception as e:
+            materials_text.append(f"\nError reading {filename}: {e}")
+
+    all_text = "\n\n".join(materials_text)
+    return all_text if all_text else "No documents loaded."
+
+st.header("1. Course Materials")
+st.info("Your notes are already loaded by your teacher.")
+st.success("Mentora is ready! Ask me anything.")
+st.session_state.ready = True
+st.stop()
                     text += para.text + "\n"
 
             all_text += f"\n\n--- START OF {filename} ---\n{text}\n--- END OF {filename} ---\n"
