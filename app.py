@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
+import PyPDF2
 import os
 import tempfile
 from pypdf import PdfReader
@@ -11,10 +12,13 @@ def load_preloaded_files():
 
     for filename in files_to_load:
         if os.path.exists(filename):
-            reader = PdfReader(filename)
+            reader = PyPDF2.PdfReader(filename)
             for page in reader.pages:
-                all_text += page.extract_text() + "\n"
-    return all_text
+                text = page.extract_text()
+                if text:
+                    all_text += text + "\n"
+        else:
+            all_text += f"\n[Warning: {filename} not found]\n"
 
 # Load materials automatically
 if "materials" not in st.session_state:
