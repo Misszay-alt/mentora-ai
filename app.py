@@ -8,7 +8,7 @@ from docx import Document
 
 def load_preloaded_files():
     all_text = ""
-    files_to_load = ["BOTICS UPDATED.pdf", "MICROSOFT PUBLISHER UPDATED.pdf"]
+    files_to_load = ["ROBOTICS UPDATED.pdf", "BASIC PUBLISHER UPDATED.pdf"]
 
     for filename in files_to_load:
         if os.path.exists(filename):
