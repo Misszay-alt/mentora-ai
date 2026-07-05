@@ -85,14 +85,14 @@ Answer:"""
             answer = response.text
 
             st.chat_message("user").write(user_question)
-            st.chat_message("assistant").write(answer)
-.
+            prompt = f"""You are Mentora, a friendly tutor.
 Answer ONLY using the LEARNING MATERIAL below.
 If the answer is not in the material, say "I couldn't find that in your notes."
 
 LEARNING MATERIAL:
 {materials_snippet}
 
+--------------------------
 Student's question: {user_question}
 Answer:"""
 
