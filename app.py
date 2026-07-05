@@ -35,6 +35,38 @@ if not api_key:
     st.stop()
 
 genai.configure(api_key=api_key)
+# 2. CHAT INTERFACE
+st.header("2. Ask Mentora")
+st.info("Your notes are already loaded by your teacher.")
+
+# Step 1: Ask for name first
+if "user_name" not in st.session_state:
+    st.session_state.user_name = ""
+
+if st.session_state.user_name == "":
+    name = st.text_input("What's your name?")
+    if st.button("Start Chatting"):
+        if name:
+            st.session_state.user_name = name
+            st.rerun()
+        else:
+            st.warning("Please enter your name")
+else:
+    st.success(f"Hi {st.session_state.user_name}! Mentora is ready for your questions.")
+
+    # Step 2: Show chat box after we have name
+    user_question = st.chat_input("Ask a question about your materials...")
+
+    if user_question:
+        with st.spinner("Mentora is thinking..."):
+            # Build the prompt with name + materials + question
+            prompt = f"You are talking to {st.session_state.user_name}.\n\nLEARNING MATERIAL:\n{st.session_state.materials[:900000]}\n\nQUESTION: {user_question}"
+
+            # Test reply for now
+            response = f"Hi {st.session_state.user_name}! You asked: {user_question}"
+
+            st.chat_message("user").write(user_question)
+            st.chat_message("assistant").write(response)
 
 
 def load_materials():
