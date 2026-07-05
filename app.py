@@ -102,7 +102,7 @@ st.header("1. Course Materials")
 st.info("Your notes are already loaded by your teacher.")
 st.success("Mentora is ready! Ask me anything.")
 st.session_state.ready = True
-st.stop()
+st.write("Materials loaded:", len(st.session_state.materials), "characters")  # ADD THIS
 
 with st.spinner("Mentora AI is studying your materials..."):
     materials_text = st.session_state.materials
