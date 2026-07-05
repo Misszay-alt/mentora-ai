@@ -5,9 +5,24 @@ import tempfile
 from pypdf import PdfReader
 from docx import Document
 
+def load_preloaded_files():
+    all_text = ""
+    files_to_load = ["BOTICS UPDATED.pdf", "MICROSOFT PUBLISHER UPDATED.pdf"]
+
+    for filename in files_to_load:
+        if os.path.exists(filename):
+            reader = PdfReader(filename)
+            for page in reader.pages:
+                all_text += page.extract_text() + "\n"
+    return all_text
+
+# Load materials automatically
+if "materials" not in st.session_state:
+    st.session_state.materials = load_preloaded_files()
+
 st.set_page_config(page_title="Mentora AI", layout="wide")
 st.title("🎓 Mentora AI")
-st.caption("Your Personal AI Tutor. Upload notes, PDFs, DOCX, or Videos. Then ask questions.")
+st.caption("Your Personal AI Tutor. Your teacher's notes are already uploaded. Just ask questions.")
 
 # 1. CONFIGURE API KEY SAFELY
 try:
@@ -21,13 +36,6 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
-# 2. FUNCTION TO LOAD ALL DOCUMENTS FROM FOLDER
-@st.cache_data
-def load_materials(folder_path="materials"):
-    """Loads all txt, pdf, docx from a materials folder"""
-    all_text = ""
-    if not os.path.exists(folder_path):
-        return "No materials folder found."
 
     for filename in os.listdir(folder_path):
         filepath = os.path.join(folder_path, filename)
@@ -52,53 +60,16 @@ def load_materials(folder_path="materials"):
             all_text += f"\nError reading {filename}: {e}"
     return all_text if all_text else "No documents loaded."
 
-# 3. SIDEBAR: UPLOAD FILES + VIDEO
-with st.sidebar:
-    st.header("1. Add Materials to Mentora")
-
-    uploaded_docs = st.file_uploader(
-        "Upload Notes",
-        type=["txt", "pdf", "docx"],
-        accept_multiple_files=True
-    )
-
-    st.info("Or put files in a 'materials' folder next to app.py")
-
-    uploaded_video = st.file_uploader("Upload Lecture Video", type=["mp4", "mov", "avi"])
-
-    if st.button("Load Materials & Start Mentora"):
-        st.session_state.ready = True
-
+  st.header("1. Course Materials")
+st.info("Your notes are already loaded by your teacher")
+st.success("Mentora is ready! Ask me anything.")
+st.session_state.ready = True
 # 4. BUILD MENTORA AI
 if "ready" not in st.session_state:
-    st.info("Upload documents or videos in the sidebar, then click 'Load Materials & Start Mentora'")
     st.stop()
 
 with st.spinner("Mentora AI is studying your materials..."):
-    materials_text = load_materials()
-
-    for doc in uploaded_docs:
-        materials_text += f"\n\n--- START OF UPLOADED {doc.name} ---\n"
-        if doc.name.endswith(".txt"):
-            materials_text += doc.read().decode("utf-8")
-        elif doc.name.endswith(".pdf"):
-            reader = PdfReader(doc)
-            for page in reader.pages:
-                materials_text += page.extract_text() + "\n"
-        elif doc.name.endswith(".docx"):
-            doc_file = Document(doc)
-            for para in doc_file.paragraphs:
-                materials_text += para.text + "\n"
-        materials_text += f"\n--- END OF {doc.name} ---\n"
-
-    video_file = None
-    if uploaded_video:
-        st.video(uploaded_video)
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
-            tmp.write(uploaded_video.read())
-            video_path = tmp.name
-        video_file = genai.upload_file(path=video_path)
-        st.success(f"Video '{uploaded_video.name}' uploaded to Mentora AI")
+    materials_text = st.session_state.materials
 
     system_prompt = f"""
     You are Mentora AI, a helpful AI Tutor for students in Accra, Ghana.
@@ -121,18 +92,13 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("Ask Mentora AI anything about your notes or video..."):
+if prompt = st.chat_input("Ask Mentora AI anything about your notes..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
         with st.spinner("Mentora AI is thinking..."):
-            if video_file:
-                response = st.session_state.chat.send_message([video_file, prompt])
-            else:
-                response = st.session_state.chat.send_message(prompt)
-
+            response = st.session_state.chat.send_message(prompt)
             st.markdown(response.text)
-
     st.session_state.messages.append({"role": "assistant", "content": response.text})
