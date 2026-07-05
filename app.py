@@ -70,7 +70,7 @@ else:
             # Build the prompt with name + materials + question
             materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."
 
-prompt = f"""You are Mentora, a friendly tutor.
+                prompt = f"""You are Mentora, a friendly tutor.
 Answer ONLY using the LEARNING MATERIAL below.
 If the answer is not in the material, say "I couldn't find that in your notes."
 
