@@ -58,7 +58,7 @@ for filename in os.listdir(folder_path):
         except Exception as e:
             all_text += f"\nError reading {filename}: {e}"
 
-return all_text if all_text else "No documents loaded."
+    return all_text if all_text else "No documents loaded."
 st.header("1. Course Materials")
 st.info("Your notes are already loaded by your teacher")
 st.success("Mentora is ready! Ask me anything.")
