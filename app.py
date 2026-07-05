@@ -52,7 +52,6 @@ if "user_name" not in st.session_state:
     st.session_state.user_name = ""
 
 if st.session_state.user_name == "":
-    name = st.text_input("What's your name?")
     if st.button("Start Chatting"):
         if name:
             st.session_state.user_name = name
