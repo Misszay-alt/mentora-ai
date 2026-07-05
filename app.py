@@ -66,7 +66,7 @@ else:
     
     user_question = st.chat_input("Ask a question about your materials...")
 if user_question:  # <- ADD THIS LINE ABOVE line 69. 0 spaces
-    with st.spinner("Mentora is thinking..."):  # <- 4 spaces
+with st.spinner("Mentora is thinking..."):  # <- 4 spaces
         # Build the prompt with name + materials + question
         materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."  # <- 8 spaces
 
