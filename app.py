@@ -68,13 +68,24 @@ else:
     if user_question:
         with st.spinner("Mentora is thinking..."):
             # Build the prompt with name + materials + question
-            prompt = f"You are talking to {st.session_state.user_name}.\n\nLEARNING MATERIAL:\n{st.session_state.materials[:900000]}\n\nQUESTION: {user_question}"
+            materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."
 
-            # Test reply for now
-            response = f"Hi {st.session_state.user_name}! You asked: {user_question}"
+prompt = f"""You are Mentora, a friendly tutor.
+Answer ONLY using the LEARNING MATERIAL below.
+If the answer is not in the material, say "I couldn't find that in your notes."
 
+LEARNING MATERIAL:
+{materials_snippet}
+
+--------------------------
+Student's question: {user_question}
+Answer:"""
+
+# Call Gemini to get the real answer
+response = model.generate_content(prompt)
+answer = response.text
             st.chat_message("user").write(user_question)
-            st.chat_message("assistant").write(response)
+            st.chat_message("assistant").write(answer)
 
 
 def load_materials():
