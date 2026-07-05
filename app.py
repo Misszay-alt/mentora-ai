@@ -84,8 +84,8 @@ Answer:"""
 # Call Gemini to get the real answer
 response = model.generate_content(prompt)
 answer = response.text
-            st.chat_message("user").write(user_question)
-            st.chat_message("assistant").write(answer)
+st.chat_message("user").write(user_question)
+st.chat_message("assistant").write(answer)
 
 
 def load_materials():
