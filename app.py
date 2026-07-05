@@ -3,7 +3,7 @@ import google.generativeai as genai
 import PyPDF2
 import os
 import tempfile
-from pyPDF2 import PdfReader
+from pypdf import PdfReader
 from docx import Document
 
 def load_preloaded_files():
