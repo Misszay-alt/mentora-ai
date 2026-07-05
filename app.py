@@ -65,7 +65,7 @@ else:
     # Step 2: Show chat box after we have name
     user_question = st.chat_input("Ask a question about your materials...")
 
-if user_question:
+    if user_question:
     with st.spinner("Mentora is thinking..."):
         materials_snippet = st.session_state.materials[:90000] if st.session_state.materials else "No materials loaded yet."
 
